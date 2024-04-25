@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { setConstraint } from "../constraints";
 import Navbar from "../Components/Navbar";
 import "../css/feed.css";
@@ -8,9 +7,10 @@ import Axios from "axios";
 import { Card, Col, Container, Row } from "react-bootstrap";
 
 export default function Feed() {
-  const [user_info, setuser_info] = useState(
+  const [user_info] = useState(
     JSON.parse(localStorage.getItem("user"))
   );
+
   const ReadMore = ({ children }) => {
     const text = children;
     const [isReadMore, setIsReadMore] = useState(true);
@@ -26,38 +26,22 @@ export default function Feed() {
       </p>
     );
   };
+
   setConstraint(true);
 
-  const titleStyles = {
-    fontFamily: "'Noto Sans JP', sans-serif",
-    fontWeight: "600", 
-    color: "#fff",
-
-    border: "2px solid green",
-    padding: "10px 20px", 
-    borderRadius: "5px", 
-    display: "inline-block", 
-    cursor: "pointer",
-    backgroundColor: "#4682A9",
-    textDecoration: "none", 
-  };
-  const [item, setitem] = useState("");
-  const [Found_item, setFound_item] = useState();
   useEffect(() => {
     Axios({
       url: "http://localhost:5000/getitem",
       method: "GET",
     })
       .then((response) => {
-        console.log("getitem responses" + response.data.postitems);
+        console.log("getitem responses", response.data.postitems);
 
         let data = response.data.postitems;
-        console.log(data);
         let items = [];
         let Found_items = [];
         data.reverse().map((item) => {
           let created_date = new Date(item.createdAt);
-
           let createdAt =
             created_date.getDate() +
             "/" +
@@ -70,56 +54,32 @@ export default function Feed() {
             created_date.getMinutes();
 
           if (item.type === "Lost" && item.status === true) {
-            console.log("true faizu");
-            console.log("true faizu" + item.itemPictures[0].Img);
-            let user = false;
-            if (item.createdBy === user_info._id) {
-              user = true;
-              console.log("true faizu");
-            }
+            let user = item.createdBy === user_info._id;
 
             items.push(
               <a
                 href={`/${item.name}?cid=${item._id}&type=${item.type}/${user}`}
+                key={item.name}
               >
-                <Col key={item.name} style={{ marginTop: "2%", paddingRight:'40px'}} md={3}>
+                <Col style={{ marginTop: "2%", paddingRight: "40px" }} md={3}>
                   <Card bsPrefix="item-card">
-                    <Card.Img
-                      variant="top"
-                      src={`data:${item.itemPictures[0].contentType};base64,${item.itemPictures[0].data}`}
+                    {item.itemPictures && item.itemPictures[0] && item.itemPictures[0].contentType &&
+                      <Card.Img
+                        variant="top"
+                        src={`data:${item.itemPictures[0].contentType};base64,${item.itemPictures[0].data}`}
                       />
-          
+                    }
                     <Card.Body bsPrefix="card-body">
-                      <Card.Title
-                      style={{
-                        fontFamily: "'Noto Sans JP', sans-serif",
-                        fontWeight: "1.35rem",
-                        color: "blue"
-                      }}
-                      >
-                        Item :{item.name}
+                      <Card.Title style={{ fontFamily: "'Noto Sans JP', sans-serif", fontWeight: "1.35rem", color: "blue" }}>
+                        Item: {item.name}
                       </Card.Title>
-                      
-                      {item.description ? (
-                        <Card.Text
-                          style={{
-                            fontFamily: "'Noto Sans JP', sans-serif",
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {" "}
-                          Description :<ReadMore>{item.description}</ReadMore>
+                      {item.description && (
+                        <Card.Text style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "1rem" }}>
+                          Description: <ReadMore>{item.description}</ReadMore>
                         </Card.Text>
-                      ) : (
-                        ""
                       )}
-                      <Card.Text
-                        style={{
-                          fontFamily: "'Noto Sans JP', sans-serif",
-                          fontSize: "1rem",
-                        }}
-                      >
-                        Created at : {createdAt}
+                      <Card.Text style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "1rem" }}>
+                        Created at: {createdAt}
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -127,50 +87,32 @@ export default function Feed() {
               </a>
             );
           } else {
-            var user1 = false;
-            if (item.createdBy === user_info._id) {
-              user1 = true;
-            }
+            let user1 = item.createdBy === user_info._id;
 
             Found_items.push(
               <a
                 href={`/${item.name}?cid=${item._id}&type=${item.type}/${user1}`}
+                key={item.name}
               >
-                <Col style={{ marginTop: "20px" ,paddingRight:'40px' }} md={3}>
-                  <Card bsPrefix="item-card" key={item.name}>
-                    <Card.Img
-                      variant="top"
-                      src={`data:${item.itemPictures[0].contentType};base64,${item.itemPictures[0].data}`}                      />
+                <Col style={{ marginTop: "20px", paddingRight: "40px" }} md={3}>
+                  <Card bsPrefix="item-card">
+                    {item.itemPictures && item.itemPictures[0] && item.itemPictures[0].contentType &&
+                      <Card.Img
+                        variant="top"
+                        src={`data:${item.itemPictures[0].contentType};base64,${item.itemPictures[0].data}`}
+                      />
+                    }
                     <Card.Body bsPrefix="card-body">
-                      <Card.Title
-                      style={{
-                        fontFamily: "'Noto Sans JP', sans-serif",
-                        fontWeight: "1.35rem",
-                        color: "blue"
-                      }}
-                      >
-                        Item :{item.name}
+                      <Card.Title style={{ fontFamily: "'Noto Sans JP', sans-serif", fontWeight: "1.35rem", color: "blue" }}>
+                        Item: {item.name}
                       </Card.Title>
-                      {item.description ? (
-                        <Card.Text
-                          style={{
-                            fontFamily: "'Noto Sans JP', sans-serif",
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {" "}
-                          Description :<ReadMore>{item.description}</ReadMore>
+                      {item.description && (
+                        <Card.Text style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "1rem" }}>
+                          Description: <ReadMore>{item.description}</ReadMore>
                         </Card.Text>
-                      ) : (
-                        ""
                       )}
-                      <Card.Text
-                        style={{
-                          fontFamily: "'Noto Sans JP', sans-serif",
-                          fontSize: "1rem",
-                        }}
-                      >
-                        Created at : {createdAt}
+                      <Card.Text style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "1rem" }}>
+                        Created at: {createdAt}
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -187,48 +129,42 @@ export default function Feed() {
       });
   }, []);
 
+  const [item, setitem] = useState([]);
+  const [Found_item, setFound_item] = useState([]);
+
   return (
     <div>
       <div>
         <Navbar />
         <h2
           style={{
-                        fontFamily: "'Noto Sans JP', sans-serif",
-            backgroundColor:"#fff",
-            color:"#000",
+            fontFamily: "'Noto Sans JP', sans-serif",
+            backgroundColor: "#fff",
+            color: "#000",
             textAlign: "center",
           }}
         >
           Welcome {user_info.firstname} 👋!
         </h2>
       </div>
-      <div style={{backgroundColor:"#71C9CE"}}>
-
-        <Container fluid style={{backgroundColor:" '#71C9CE'"}}>
-          <h2 style={{ textAlign: "center" ,color:"#fff" }}>Lost items :</h2>
+      <div style={{ backgroundColor: "#71C9CE" }}>
+        <Container fluid style={{ backgroundColor: "'#71C9CE'" }}>
+          <h2 style={{ textAlign: "center", color: "#fff" }}>Lost items :</h2>
           <div className="title-border"></div>
           <Row>{item}</Row>
         </Container>
       </div>
-      <div style={{backgroundColor:"#71C9CE"}}>
+      <div style={{ backgroundColor: "#71C9CE" }}>
         <Container fluid>
-          {Found_item ? (
+          {Found_item.length > 0 && (
             <div>
-              <h2 style={{ textAlign: "center" , color:"#fff" }}>Found items :</h2>
+              <h2 style={{ textAlign: "center", color: "#fff" }}>Found items :</h2>
               <div className="title-border"></div>
-              <Row >{Found_item}</Row>
+              <Row>{Found_item}</Row>
             </div>
-          ) : (
-            ""
           )}
         </Container>
-
       </div>
-    
     </div>
-
-
-    
-    
   );
 }
