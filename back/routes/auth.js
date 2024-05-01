@@ -41,6 +41,7 @@ const signout = (req, res) => {
     message: "Signed out successfully !",
   });
 };
+
 //MIDDLEWARE
 
 const decryptJwt = async (token) => {

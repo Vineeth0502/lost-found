@@ -44,6 +44,7 @@ function ItemPage(props) {
   const [type, settype] = useState("");
   const [messageId, setmessageId] = useState("");
   const [response, setResponse] = useState("");
+  const [location, setLocation] = useState("");
   const handleCloseDelete = () => setShowDelete(false);
   const handleShowDelete = () => setShowDelete(true);
   const handleCloseprompt = () => setvalidateUser(false);
@@ -246,15 +247,18 @@ function ItemPage(props) {
                   {answers.length === 0 ? (
                     <h3 style={{color:"#000"}}>No Answers Yet.</h3>
                   ) : (
-                    <div style={{ display: "flex", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", flexWrap: "wrap",overflow: "auto" }}>
                       {answers.map((answer) => (
                         <>
-                          <div className="responses">
-                            <Card border="primary" style={{ width: "18rem" }}>
+                          <div className="responses" style={{ overflow: "auto" }}>
+                          <Card border="primary" style={{ width: "18rem", overflow: "auto" }}>
                               <Card.Body>
-                                <Card.Title>
-                                  Answer : {answer.answer}
-                                </Card.Title>
+                                  <Card.Title>
+                                      Answer : {answer.answer}
+                                  </Card.Title>
+                                  <Card.Title>
+                                      Location : <a href={answer.location} style={{wordBreak: "break-all", display: "block"}}> {answer.location} </a>
+                                  </Card.Title>
                               </Card.Body>
                               <ListGroup className="list-group-flush">
                                 <ListGroupItem>
@@ -340,7 +344,7 @@ function ItemPage(props) {
       .then((response) => {
         console.log(response);
         handleCloseDelete();
-        addToast("Item kicked to 🗑️ successfully!", {
+        addToast("Item kicked to 🗑 successfully!", {
           appearance: "success",
         });
         setTimeout(() => {
@@ -379,7 +383,7 @@ function ItemPage(props) {
     })
       .then((res) => {
         console.log(res);
-        addToast("Item edited✏️ successfully!", {
+        addToast("Item edited✏ successfully!", {
           appearance: "success",
         });
         setTimeout(() => {
@@ -404,6 +408,7 @@ function ItemPage(props) {
         itemId: item_id,
         question: itemquestion,
         answer: answer,
+        location: location, // Add the location to the data being sent
         givenBy: JSON.parse(localStorage.getItem("user")),
         belongsTo: Createdby,
       },
@@ -411,7 +416,7 @@ function ItemPage(props) {
       .then((res) => {
         console.log(res);
         handleCloseQuestion();
-        addToast("Response saved ✔️", {
+        addToast("Response saved ✔", {
           appearance: "success",
         });
         setTimeout(() => {
@@ -434,7 +439,7 @@ function ItemPage(props) {
               return (
                 <div style={{ border: "2px solid black" }}>
                   <img
-          src={`data:${i.contentType};base64,${i.data}`}
+                    src={`data:${i.contentType};base64,${i.data}`}
                     alt="item"
                   />
                 </div>
@@ -502,6 +507,16 @@ function ItemPage(props) {
                   onChange={(e) => setAnswer(e.target.value)}
                 />
               </Form.Group>
+              <Form.Group>
+                <Form.Label>Enter the location of the item</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </Form.Group>
+
             </Modal.Body>
             <Modal.Footer>
               <Button variant="primary" onClick={handleCloseQuestion}>

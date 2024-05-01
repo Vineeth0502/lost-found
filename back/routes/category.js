@@ -118,7 +118,7 @@ router.get("/getquestion/:id", (req, res) => {
 
 router.post("/submitAnswer", async (req, res) => {
   console.log(req.body);
-  const { itemId, question, answer, givenBy, belongsTo } = req.body;
+  const { itemId, question, answer, location, givenBy, belongsTo } = req.body;
   
 
   const newmessage = await messageschema.create({
@@ -126,6 +126,7 @@ router.post("/submitAnswer", async (req, res) => {
     belongsTo: belongsTo,
     question: question,
     answer: answer,
+    location: location,
     givenBy: givenBy,
   });
   newmessage.save((error, item) => {

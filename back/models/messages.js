@@ -22,6 +22,10 @@ const messageSchema = new Schema(
       type: String,
       required: true,
     },
+    location: {
+      type: String,
+      //required: true,
+    },
     response: {
       type: String,
       default: "Moderation",
