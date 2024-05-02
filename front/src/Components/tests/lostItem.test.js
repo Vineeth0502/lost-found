@@ -1,37 +1,52 @@
-import request from 'supertest';
-import app from '../app';
+import React from 'react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import LostItem from './LostItem';
+import axios from 'axios';
 
-describe('POST /postitem', () => {
-  it('should respond with status 200 when item is successfully posted', async () => {
-    // Create a mock item object
-    const mockItem = {
-      name: 'Test Item',
-      description: 'Test description',
-      type: 'Lost',
-      // Add other required fields here
-    };
+jest.mock('axios');
 
-    const response = await request(app)
-      .post('/postitem')
-      .send(mockItem);
-
-    expect(response.status).toBe(200);
-    // Add other assertions for the expected response body, etc.
+describe('LostItem Component', () => {
+  beforeEach(() => {
+    axios.mockClear();
   });
 
-  it('should respond with status 400 when required fields are missing', async () => {
-    // Create a mock item object with missing required fields
-    const mockItem = {
-      // Missing required fields
-    };
-
-    const response = await request(app)
-      .post('/postitem')
-      .send(mockItem);
-
-    expect(response.status).toBe(400);
-    // Add other assertions for the expected response body, error messages, etc.
+  it('renders LostItem component', () => {
+    render(<LostItem />);
+    expect(screen.getByText('Post Item')).toBeInTheDocument();
   });
+
+  it('submits form with valid data', async () => {
+    const { getByLabelText, getByText } = render(<LostItem />);
+    const itemNameInput = getByLabelText('Item name*');
+    const descriptionInput = getByLabelText('Description*');
+    const typeInput = getByLabelText('Item type*');
+
+    fireEvent.change(itemNameInput, { target: { value: 'Test Item' } });
+    fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
+    fireEvent.change(typeInput, { target: { value: 'Lost' } });
+
+    fireEvent.click(getByText('Submit'));
+
+    await waitFor(() => {
+      expect(axios).toHaveBeenCalledWith({
+        url: 'http://localhost:5000/postitem',
+        method: 'POST',
+        data: expect.any(FormData),
+        headers: {
+          Authorization: expect.any(String),
+        },
+      });
+    });
+  });
+
+  it('displays error message for missing required fields', async () => {
+    render(<LostItem />);
+    fireEvent.click(screen.getByText('Submit'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Did you miss any of the required fields 🙄?')).toBeInTheDocument();
+    });
+  });
+
+  // Add more test cases as needed...
 });
-
-// Add more test cases for other scenarios like file upload, etc.
