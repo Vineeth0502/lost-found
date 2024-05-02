@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../app';
+import app from '../../App';
 
 describe('GET /mylistings/:userId', () => {
   it('should respond with status 200 and user listings', async () => {
