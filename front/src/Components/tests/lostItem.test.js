@@ -1,37 +1,23 @@
-import request from 'supertest';
-import app from '../app';
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import { ToastProvider } from 'react-toast-notifications'; // Import the ToastProvider
+import LostItem from '../Lost_item';
 
-describe('POST /postitem', () => {
-  it('should respond with status 200 when item is successfully posted', async () => {
-    // Create a mock item object
-    const mockItem = {
-      name: 'Test Item',
-      description: 'Test description',
-      type: 'Lost',
-      // Add other required fields here
-    };
+test('renders post item pop-up', () => {
+  const { getByText } = render(
+    <ToastProvider>
+      <LostItem />
+    </ToastProvider>
+  );
 
-    const response = await request(app)
-      .post('/postitem')
-      .send(mockItem);
+  // Find the button that triggers the modal
+  const postItemButton = getByText('Post Item');
 
-    expect(response.status).toBe(200);
-    // Add other assertions for the expected response body, etc.
-  });
+  // Click the button to open the modal
+  fireEvent.click(postItemButton);
 
-  it('should respond with status 400 when required fields are missing', async () => {
-    // Create a mock item object with missing required fields
-    const mockItem = {
-      // Missing required fields
-    };
-
-    const response = await request(app)
-      .post('/postitem')
-      .send(mockItem);
-
-    expect(response.status).toBe(400);
-    // Add other assertions for the expected response body, error messages, etc.
-  });
+  // Check if the modal title is present
+  const modalTitle = getByText('Post item');
+  expect(modalTitle).toBeInTheDocument();
 });
-
-// Add more test cases for other scenarios like file upload, etc.
