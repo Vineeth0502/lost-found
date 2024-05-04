@@ -3,17 +3,18 @@ Description
 the Community Lost and Found Application. In a world where misplaced belongings often lead to frustration and inconvenience, our application serves as a beacon of hope, seamlessly connecting users with their lost items and facilitating the return of cherished possessions. Through a user-friendly interface and a comprehensive set of features, our platform empowers individuals to report lost items, search for missing belongings, and even notify owners when items are found. With robust functionality for both users and administrators, including detailed reporting, item tracking, and profile management, our application ensures a smooth and efficient process for handling lost and found items within communities. Whether it's a misplaced phone, a lost wallet, or a forgotten bag, our solution is designed to bring peace of mind and reunite people with what matters most to them. Welcome to the future of lost and found management – welcome to the Community Lost and Found Application.
 
 Installation
-1.Clone the repository to your local machine
-  https://github.com/Vineeth0502/lost-found.git
+1. Clone the repository to your local machine
+   https://github.com/Vineeth0502/lost-found.git
 2. Navigate to the project directory:
-  cd lost-found
+   cd lost-found
 3. Install dependencies using npm:
-  mpm install 
-  you need to install dependencies in front and back folders those are frontend and backend.
+   mpm install 
+   you need to install dependencies in front and back folders those are frontend and backend.
 
 MongoDB Setup
 Prefered Method:
-1. creating an cluster in the mongodb cloud and then connect it with the link of the cloud database.
+creating an cluster in the mongodb cloud and then connect it with the link of the cloud database.
+
 Method 2:
 1. Install MongoDB on your machine if you haven't already. Follow the instructions on the official MongoDB documentation for your operating system.
 2. Start the MongoDB service:
