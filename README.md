@@ -11,7 +11,8 @@ Installation
    mpm install 
    you need to install dependencies in front and back folders those are frontend and backend.
 
-MongoDB Setup
+MongoDB Setup:
+
 Prefered Method:
 creating an cluster in the mongodb cloud and then connect it with the link of the cloud database.
 
