@@ -1,5 +1,6 @@
 Project: Community Lost-Found Application
-Description
+
+Description:
 the Community Lost and Found Application. In a world where misplaced belongings often lead to frustration and inconvenience, our application serves as a beacon of hope, seamlessly connecting users with their lost items and facilitating the return of cherished possessions. Through a user-friendly interface and a comprehensive set of features, our platform empowers individuals to report lost items, search for missing belongings, and even notify owners when items are found. With robust functionality for both users and administrators, including detailed reporting, item tracking, and profile management, our application ensures a smooth and efficient process for handling lost and found items within communities. Whether it's a misplaced phone, a lost wallet, or a forgotten bag, our solution is designed to bring peace of mind and reunite people with what matters most to them. Welcome to the future of lost and found management – welcome to the Community Lost and Found Application.
 
 Installation
