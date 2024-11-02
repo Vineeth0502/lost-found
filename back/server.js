@@ -21,7 +21,7 @@ app.use(cookie_parser());
 app.use(express.json());
 
 const DB =
-  "mongodb+srv://vineethketham:4jrRDNlbEQQDtlCC@cluster0.q2gdh1u.mongodb.net/";
+  "mongodb+srv://vineethketham:qavlsaEbBadiLyJ0@cluster0.rinvz.mongodb.net/";
 
 mongoose
   .connect(DB, {
