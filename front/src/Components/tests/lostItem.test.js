@@ -21,3 +21,5 @@ test('renders post item pop-up', () => {
   const modalTitle = getByText('Post item');
   expect(modalTitle).toBeInTheDocument();
 });
+
+// Add more test cases for other scenarios like file upload, etc.

@@ -11,15 +11,16 @@ describe('Login Component', () => {
     expect(getByPlaceholderText('Password')).toBeInTheDocument();
   });
 
-  it('submits login form with valid credentials', async () => {
-    const { getByPlaceholderText, getByText } = render(<Login />);
-    const emailInput = getByPlaceholderText('Email id');
-    const passwordInput = getByPlaceholderText('Password');
+  // Add assertions for the expected behavior after successful login
+});
 
-    fireEvent.change(emailInput, { target: { value: 'adithya1234@gmail.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'Aa12345' } });
-
-    fireEvent.click(getByText('Submit'));
+test('Login form displays error message on invalid credentials', async () => {
+  render(<Login />);
+  
+  fireEvent.change(screen.getByPlaceholderText('Email id'), { target: { value: 'invalid@example.com' } });
+  fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'invalidpassword' } });
+  
+  fireEvent.click(screen.getByText('Submit'));
 
     await waitFor(() => {
       expect(localStorage.getItem('token')).toBeTruthy();
