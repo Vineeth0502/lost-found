@@ -10,10 +10,10 @@ const { promisify } = require("util");
 const Signup = require("../models/signup");
 const { token } = require("morgan");
 
-require("dotenv").config({ path: "../../.env" });
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES = process.env.JWT_EXPIRES;
-const NODE_ENV = process.env.NODE_ENV;
+// require("dotenv").config({ path: "../../.env" });
+const JWT_SECRET = "Jackson07894";
+const JWT_EXPIRES = "7d";
+const NODE_ENV = "development";
 
 const signJwt = (id) => {
   return jwt.sign({ id }, JWT_SECRET, {
