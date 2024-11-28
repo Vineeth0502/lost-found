@@ -1,5 +1,6 @@
 const { postitem } = require("../models/category");
 const messageschema = require("../models/messages");
+const Notification = require("../models/NotificationSchema");
 require("dotenv").config({ path: "../../.env" });
 const { requireSignin, userMiddleware } = require("../middleware");
 const express = require("express");
@@ -8,9 +9,8 @@ const multer = require("multer");
 const shortid = require("shortid");
 const path = require("path");
 
-// Define storage for multer
 
-const storage = multer.memoryStorage(); // Store files in memory
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.post(
@@ -40,9 +40,16 @@ router.post(
         createdBy: req.user._id,
         itemPictures: itemPictures,
       });
+
+      // Create a new notification for this item
+      const newNotification = await Notification.create({
+        itemId: newPost._id,
+        type: type === "Lost It" ? "lost" : "found",
+      });
+
       newPost.save((error, item) => {
         if (error) return res.status(400).json({ error });
-        if (item) return res.status(201).json({ item });
+        if (item) return res.status(201).json({ item, notification: newNotification });
       });
     } catch (err) {
       console.log("Error:", err);
@@ -160,6 +167,67 @@ router.get("/mylistings/:id", (req, res) => {
     });
   });
 });
+
+
+router.get("/notifications/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const notifications = await Notification.find({
+      "viewedBy.userId": { $ne: userId },
+      status: true,
+    }).populate("itemId");
+
+    res.status(200).json({ notifications });
+  } catch (err) {
+    console.log("Error fetching notifications:", err);
+    res.status(500).json({ error: "Could not fetch notifications" });
+  }
+});
+
+
+router.post("/notification/respond", async (req, res) => {
+  const { notificationId, userId, response } = req.body;
+
+  try {
+    const notification = await Notification.findById(notificationId);
+
+    if (!notification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+
+    // Update or add the user's response in the `viewedBy` array
+    const userResponse = notification.viewedBy.find(
+      (view) => view.userId.toString() === userId
+    );
+
+    if (userResponse) {
+      userResponse.status = response;
+    } else {
+      notification.viewedBy.push({ userId, status: response });
+    }
+
+    // Save the updated notification
+    await notification.save();
+    res.status(200).json({ message: "Response recorded" });
+  } catch (err) {
+    console.log("Error updating notification:", err);
+    res.status(500).json({ error: "Could not update notification" });
+  }
+});
+
+router.get("/notifications", async (req, res) => {
+  try {
+    const notifications = await Notification.find()
+      .populate("itemId") 
+      .sort({ createdAt: -1 }); 
+
+    res.status(200).json({ notifications });
+  } catch (error) {
+    console.error("Error fetching all notifications:", error);
+    res.status(500).json({ error: "Could not fetch notifications" });
+  }
+});
+
 
 router.post("/confirmResponse/:id", (req, res) => {
   const { id } = req.params;
