@@ -16,3 +16,4 @@ test('renders post item pop-up', () => {
   expect(modalTitle).toBeInTheDocument();
 });
 
+// Add more test cases for other scenarios like file upload, etc.
