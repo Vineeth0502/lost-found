@@ -16,8 +16,8 @@ describe('Login Component', () => {
     const emailInput = getByPlaceholderText('Email id');
     const passwordInput = getByPlaceholderText('Password');
 
-    fireEvent.change(emailInput, { target: { value: 'adithya1234@gmail.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'Aa12345' } });
+    fireEvent.change(emailInput, { target: { value: 'jhon@gmail.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'A1212345' } });
 
     fireEvent.click(getByText('Submit'));
 

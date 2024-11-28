@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import FeaturesSection from '../FeatureSection';
-import { ToastProvider } from 'react-toast-notifications'; // Import the ToastProvider
+import { ToastProvider } from 'react-toast-notifications'; 
 import '@testing-library/jest-dom/extend-expect';
 
 test('renders FeaturesSection component', () => {
