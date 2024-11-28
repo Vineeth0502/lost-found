@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import Login from '../Login';
 import '@testing-library/jest-dom/extend-expect';
 
@@ -16,16 +16,32 @@ describe('Login Component', () => {
     const emailInput = getByPlaceholderText('Email id');
     const passwordInput = getByPlaceholderText('Password');
 
-    fireEvent.change(emailInput, { target: { value: 'jhon@gmail.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'A1212345' } });
+    fireEvent.change(emailInput, { target: { value: 'adithya1234@gmail.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'Aa12345' } });
 
     fireEvent.click(getByText('Submit'));
 
     await waitFor(() => {
-      expect(localStorage.getItem('token')).toBeTruthy();
-      expect(localStorage.getItem('user')).toBeTruthy();
+      const errorMessage = screen.getByText(/Invalid credentials/i);
+      expect(errorMessage).toBeInTheDocument();
     });
   });
 
-  // Add more test cases as needed...
+  it('saves token and user info on successful login', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ token: 'dummy-token', user: { id: 1, name: 'John Doe' } }),
+      })
+    );
+
+    render(<Login />);
+    fireEvent.change(screen.getByPlaceholderText('Email id'), { target: { value: 'valid@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'validpassword' } });
+    fireEvent.click(screen.getByText('Submit'));
+    await waitFor(() => {
+      expect(localStorage.getItem('token')).toBe('dummy-token');
+      expect(JSON.parse(localStorage.getItem('user'))).toEqual({ id: 1, name: 'John Doe' });
+    });
+    global.fetch.mockRestore();
+  });
 });
